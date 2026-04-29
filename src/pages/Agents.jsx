@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAgents } from "@/api/valoagent";
 import { Link } from "react-router-dom";
+import AgentCard from "@/components/AgentCard";
 
 export default function Agents() {
 
@@ -28,34 +29,42 @@ export default function Agents() {
     );
 
     return (
-        <main>
-            <h1>Agentes</h1>
-            
-            <input
-                type="text"
-                placeholder="Buscar agente..."
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-            />  
+        <main className="page-shell agents-page">
+            <section className="agents-header">
+                <p className="agents-kicker">Roster</p>
+                <h1>Agentes</h1>
+                <p className="agents-copy">
+                    Busca un agente y entra a su perfil para revisar rol, descripción y habilidades.
+                </p>
 
-            {loading && <p>Loading agents...</p>}
+                <input
+                    className="agents-search"
+                    type="text"
+                    placeholder="Buscar agente..."
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                />
+            </section>
 
-            {error && <p>Error: {error}</p>}
+            {loading && (
+                <section className="status-card">
+                    <p>Cargando agentes...</p>
+                </section>
+            )}
 
+            {error && (
+                <section className="status-card">
+                    <p>Error: {error}</p>
+                </section>
+            )}
 
-        <section>
-            {filteredAgents.map(agent => (
-                <article key={agent.uuid}>
-                    <img src={agent.displayIcon} alt={agent.displayName} />
-                    <h2>{agent.displayName}</h2>
-                    <p>{agent.description}</p>
-                    <Link to={`/items/${agent.uuid}`}>Ver Detalle de Agente</Link>
-                </article>
-            ))}
-        </section>
-
+            {!loading && !error && (
+            <section className="agents-grid">
+                {filteredAgents.map((agent) => (
+                    <AgentCard key={agent.uuid} agent={agent} />
+                ))}
+            </section>
+            )}
         </main>
-
     );
-    
 }
