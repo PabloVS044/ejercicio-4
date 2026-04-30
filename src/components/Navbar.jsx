@@ -1,26 +1,54 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function Navbar({ title }) {
+    const { favorites } = useFavorites();
+
     return(
-        <header>
-            <nav>
-                <h2>{title}</h2>
+        <header className="site-header">
+            <nav className="site-nav page-shell">
+                <NavLink className="site-brand" to="/">
+                    <h2>{title}</h2>
+                </NavLink>
 
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
+                <ul className="site-nav-links">
+                    <li className="site-nav-item">
+                        <NavLink
+                            className={({ isActive }) =>
+                                `site-nav-link${isActive ? " is-active" : ""}`
+                            }
+                            to="/"
+                        >
+                            Home
+                        </NavLink>
                     </li>
-                    <li>
-                        <Link to="/items">Agentes</Link>
+                    <li className="site-nav-item">
+                        <NavLink
+                            className={({ isActive }) =>
+                                `site-nav-link${isActive ? " is-active" : ""}`
+                            }
+                            to="/items"
+                        >
+                            Agentes
+                        </NavLink>
                     </li>
-
+                    <li className="site-nav-item">
+                        <NavLink
+                            className={({ isActive }) =>
+                                `site-nav-link${isActive ? " is-active" : ""}`
+                            }
+                            to="/favorites"
+                        >
+                            Favoritos ({favorites.length})
+                        </NavLink>
+                    </li>
                 </ul>
             </nav>
         </header>
     )
 }
 
-Navbar.PropTypes = {
+Navbar.propTypes = {
     title: PropTypes.string.isRequired,
-}
+};

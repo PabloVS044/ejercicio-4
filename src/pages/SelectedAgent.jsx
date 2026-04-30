@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAgentById } from "@/api/valoagent";
 import AbilityCard from "@/components/AbilityCard";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export default function SelectedAgent() {
 
@@ -10,6 +11,7 @@ export default function SelectedAgent() {
     const [agent, setAgent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { isFavorite, toggleFavorite } = useFavorites();
 
     useEffect(() => {
         async function fetchAgent() {
@@ -74,6 +76,13 @@ export default function SelectedAgent() {
 
                 <div className="agent-summary">
                     <h1>{agent.displayName}</h1>
+                    <button
+                        className={`favorite-btn${isFavorite(agent.uuid) ? " is-active" : ""}`}
+                        type="button"
+                        onClick={() => toggleFavorite(agent)}
+                    >
+                        {isFavorite(agent.uuid) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                    </button>
                     <p>{agent.description}</p>
 
                     {agent.role && (

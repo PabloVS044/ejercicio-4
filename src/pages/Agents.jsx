@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAgents } from "@/api/valoagent";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AgentCard from "@/components/AgentCard";
 
 export default function Agents() {
@@ -9,6 +9,7 @@ export default function Agents() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchAgents() {
@@ -28,6 +29,15 @@ export default function Agents() {
         agent.displayName.toLowerCase().includes(search.toLowerCase())
     );
 
+    function goToRandom(){
+        if (agents.length === 0) return;
+
+        const randomIndex = Math.floor(Math.random() * agents.length);
+        const randomAgent = agents[randomIndex];
+
+        navigate(`/items/${randomAgent.uuid}`);
+    }
+
     return (
         <main className="page-shell agents-page">
             <section className="agents-header">
@@ -44,6 +54,11 @@ export default function Agents() {
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                 />
+
+                <button onClick={goToRandom} disabled={loading  || agents.length === 0} className="agents-random-btn">
+                    Agente Aleatorio
+                </button>
+
             </section>
 
             {loading && (
